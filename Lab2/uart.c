@@ -25,7 +25,7 @@ typedef struct uart{
 }UART;
 
 UART uart[4];
-
+int BASE=10;
 int uart_init()
 {
   int i; UART *up;
@@ -45,7 +45,13 @@ int ugetc(UART *up)
 }
 
 int uputc(UART *up, char c)
+{int uprints(UART *up, char *s)
 {
+  while(*s)
+    uputc(up, *s++);
+}
+
+/** WRITE YOUR uprintf(UART *up, char *fmt, . . .) for formatted print **/
   while(*(up->base + FR) & TXFF);
   *(up->base + DR) = c;
 }
@@ -64,3 +70,137 @@ int uprints(UART *up, char *s)
   while(*s)
     uputc(up, *s++);
 }
+
+//recursive int to char conversion and output
+int rpu(UART *up, u32 x)
+{  
+    char c;
+    if (x){
+      if(BASE==10){
+        c = ctable[x % 10];
+       rpu(up,x / 10);
+       uputc( up,c);
+      }else if(BASE==12){
+    c = ctable[x % 12];
+       rpu(up,x / 12);
+       uputc( up,c);
+      }else if(BASE==8){
+          c = ctable[x % 8];
+       rpu(up,x / 8);
+       uputc( up,c);
+      }
+     
+    }
+}
+
+//prints unsigned int
+int printu(UART *up, u32 x)
+{
+    BASE=10;
+   (x==0)? uputc( up,'0') : rpu(up,x);
+   uputc( up,' ');
+}
+
+//prints decimal (base 10)
+ int  printd(UART *up, int x){
+     BASE=10;
+    if (x<0){
+        uputc( up,'-');
+        x= -x;
+    }
+    rpu(up,x);
+
+ }
+
+//prints base 16
+ int  printx(UART *up, u32 x){
+     BASE=16;
+     uputc( up,'0');
+     uputc( up,'x');
+     if (x<0){
+        uputc( up,'-');
+        x= -x;
+    }
+    rpu(up,x);
+ }
+
+//prints base 8
+ int  printo(UART *up, u32 x){
+     BASE =8;
+        uputc( up,'0');
+         if (x<0){
+        uputc( up,'-');
+        x= -x;
+                }   
+    rpu(up, x);
+ }
+
+//prints string
+ int prints(UART *up, char* x){
+     int i=0;
+     while(x[i]!='\0'){
+        
+         uputc( up,x[i]);
+         i++;
+     }
+ }
+
+
+
+int myprintf(UART *up,char *fmt, ...){
+      int *ip =&fmt;    
+    int i=0;
+    char *cp;
+    
+
+    cp=fmt;
+
+
+
+    while (*(cp+i)!='\0'){
+    
+
+    if (*(cp+i)=='\n'){
+        uputc( up,'\r\n');
+    }
+    else if(*(cp+i)!='%'){
+        uputc( up,*(cp+i));
+     }
+     else{
+         i++;
+         if(*(cp+i)=='d'){
+             ip=ip+1;
+            
+            
+            (*ip==0)? uputc( up,'0') :  printd(up,*ip);
+
+      }
+      else if(*(cp+i)=='x'){
+            ip=ip+1;
+            (*ip==0)? uputc( up,'0') : printx(up,*ip);
+            
+        }else if(*(cp+i)=='c'){
+             ip=ip+1;
+             uputc( up,*ip);
+            
+        }else if(*(cp+i)=='o'){
+            ip=ip+1;
+            
+           (*ip==0)? uputc( up,'0') :  printo(up,*ip);
+        }
+        else if(*(cp+i)=='u'){
+              ip=ip+1;
+            printu(up,*ip);
+        }
+        else if(*(cp+i)=='s'){
+             ip=ip+1;
+
+      
+               prints(up,*ip);
+        }
+     }
+     i++;
+    }
+
+}
+
