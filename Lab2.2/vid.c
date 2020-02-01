@@ -40,7 +40,7 @@ unsigned char *font;
 int row, col, scrow_row = 4;
 int WIDTH = 640;
 
-extern uprintf(UART* up,char *fmt, ...);  // write this in YOUR uart.c file
+extern uprintf(char *fmt, ...);  // write this in YOUR uart.c file
 
 int fbuf_init()
 {

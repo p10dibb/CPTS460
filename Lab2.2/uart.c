@@ -25,6 +25,7 @@ typedef struct uart{
 }UART;
 
 UART uart[4];
+UART *up;
 int BASE=10;
 char *ctable = "0123456789ABCDEF";
 
@@ -143,7 +144,7 @@ int printu(UART *up, u32 x)
 
 
 
-int myprintf(UART *up,char *fmt, ...){
+int uprintf(char *fmt, ...){
       int *ip =&fmt;    
     int i=0;
     char *cp;
