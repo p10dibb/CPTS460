@@ -28,23 +28,24 @@ Color LCD base address: 0x10120000 - 0x1012FFFF
 20    interruptStatusReg
 etc
 ************************************************************************/
-#include "font0"  // NOTE: font0 is NOT a bitmap but  char fonts0={ char map }
+#include "font0" // NOTE: font0 is NOT a bitmap but  char fonts0={ char map }
 
-extern int color;  // define this in your t.c file
-extern char *tab;  // define this in your t.c file: char *tab = "0123456789ABCDEF";
-
+extern int color; // define this in your t.c file
+extern char *tab; // define this in your t.c file: char *tab = "0123456789ABCDEF";
 
 u8 cursor;
 int volatile *fb;
 unsigned char *font;
 int row, col, scrow_row = 4;
 int WIDTH = 640;
+int size = 1;
 
-extern uprintf(char *fmt, ...);  // write this in YOUR uart.c file
+extern uprintf(char *fmt, ...); // write this in YOUR uart.c file
 
 int fbuf_init()
 {
-  int x; int i;
+  int x;
+  int i;
   /**** for SVGA 800X600 these values are in ARM DUI02241 *********
   *(volatile unsigned int *)(0x1000001c) = 0x2CAC; // 800x600
   *(volatile unsigned int *)(0x10120000) = 0x1313A4C4;
@@ -54,21 +55,21 @@ int fbuf_init()
   ***************************************************************/
 
   /********* for VGA 640x480 ************************/
-  *(volatile unsigned int *)(0x1000001c) = 0x2C77;        // LCDCLK SYS_OSCCLK
-  *(volatile unsigned int *)(0x10120000) = 0x3F1F3F9C;    // time0
-  *(volatile unsigned int *)(0x10120004) = 0x090B61DF;    // time1
-  *(volatile unsigned int *)(0x10120008) = 0x067F1800;    // time2
-  *(volatile unsigned int *)(0x10120010) = (6*1024*1024); // panelBaseAddress
-  *(volatile unsigned int *)(0x10120018) = 0x82B;         // control register
-  
+  *(volatile unsigned int *)(0x1000001c) = 0x2C77;            // LCDCLK SYS_OSCCLK
+  *(volatile unsigned int *)(0x10120000) = 0x3F1F3F9C;        // time0
+  *(volatile unsigned int *)(0x10120004) = 0x090B61DF;        // time1
+  *(volatile unsigned int *)(0x10120008) = 0x067F1800;        // time2
+  *(volatile unsigned int *)(0x10120010) = (6 * 1024 * 1024); // panelBaseAddress
+  *(volatile unsigned int *)(0x10120018) = 0x82B;             // control register
+
   /****** at 0x200-0x3FC are LCDpalletes of 128 words ***************
   unsigned int *inten = (unsigned int *)(0x10120200);
   for (i=0; i<128; i++){
        inten[i]=0x8F008F00;
   }
   ******** yet to figure out HOW TO use these palletes *************/
-  fb = (int *)(6*1024*1024);  // at 1MB area; enough for 800x600 SVGA
-  font = fonts0;              // use fonts0 for char bit patterns 
+  fb = (int *)(6 * 1024 * 1024); // at 1MB area; enough for 800x600 SVGA
+  font = fonts0;                 // use fonts0 for char bit patterns
 
   // for (x = 0; x < (800 * 600); ++x) // for one BAND
   /******** these will show 3 bands of BLUE, GREEN, RED ********* 
@@ -81,31 +82,31 @@ int fbuf_init()
   ************* used only during intial testing ****************/
 
   // for 640x480 VGA mode display
-  for (x=0; x<640*480; x++)
-    fb[x] = 0x00000000;    // clean screen; all pixels are BLACK
-  cursor = 127; // cursor bit map in font0 at 127
+  for (x = 0; x < 640 * 480; x++)
+    fb[x] = 0x00000000; // clean screen; all pixels are BLACK
+  cursor = 127;         // cursor bit map in font0 at 127
 }
 
 int clrpix(int x, int y)
 {
-  int pix = y*640 + x;
+  int pix = y * 640 + x;
   fb[pix] = 0x00000000;
 }
 
 int setpix(int x, int y)
 {
-  int pix = y*640 + x;
-  if (color==RED)
-     fb[pix] = 0x000000FF;
-  if (color==BLUE)
-     fb[pix] = 0x00FF0000;
-  if (color==GREEN)
-     fb[pix] = 0x0000FF00;
-  if (color==WHITE)
-     fb[pix] = 0x00FFFFFF;
-  if (color==YELLOW)
-     fb[pix] = 0x0000FFFF;
-  if (color==CYAN)
+  int pix = y * 640 + x;
+  if (color == RED)
+    fb[pix] = 0x000000FF;
+  if (color == BLUE)
+    fb[pix] = 0x00FF0000;
+  if (color == GREEN)
+    fb[pix] = 0x0000FF00;
+  if (color == WHITE)
+    fb[pix] = 0x00FFFFFF;
+  if (color == YELLOW)
+    fb[pix] = 0x0000FFFF;
+  if (color == CYAN)
     fb[pix] = 0x00FFFF00;
 }
 
@@ -114,15 +115,17 @@ int dchar(unsigned char c, int x, int y)
   int r, bit;
   unsigned char *caddress, byte;
 
-  caddress = font + c*16;
+  caddress = font + c * 16;
   //  printf("c=%x %c caddr=%x\n", c, c, caddress);
 
-  for (r=0; r<16; r++){
+  for (r = 0; r < 16; r++)
+  {
     byte = *(caddress + r);
 
-    for (bit=0; bit<8; bit++){
-      if (byte & (1<<bit))
-	  setpix(x+bit, y+r);
+    for (bit = 0; bit < 8; bit++)
+    {
+      if (byte & (1 << bit))
+        setpix(x + bit, y + r);
     }
   }
 }
@@ -132,15 +135,17 @@ int undchar(unsigned char c, int x, int y)
   int row, bit;
   unsigned char *caddress, byte;
 
-  caddress = font + c*16;
+  caddress = font + c * 16;
   //  printf("c=%x %c caddr=%x\n", c, c, caddress);
 
-  for (row=0; row<16; row++){
+  for (row = 0; row < 16; row++)
+  {
     byte = *(caddress + row);
 
-    for (bit=0; bit<8; bit++){
-      if (byte & (1<<bit))
-	  clrpix(x+bit, y+row);
+    for (bit = 0; bit < 8; bit++)
+    {
+      if (byte & (1 << bit))
+        clrpix(x + bit, y + row);
     }
   }
 }
@@ -151,7 +156,7 @@ int undchar(unsigned char c, int x, int y)
 //     dchar(*s, x, y);
 //     x+=8;
 //     s++;
-    
+
 //   }
 // }
 /************
@@ -166,47 +171,49 @@ int scroll()
 int scroll()
 {
   int i;
-  for (i=scrow_row*16*640; i<640*480-640*16; i++){
-    fb[i] = fb[i+ 640*16];
-  } 
+  for (i = scrow_row * 16 * 640; i < 640 * 480 - 640 * 16; i++)
+  {
+    fb[i] = fb[i + 640 * 16];
+  }
 }
-  
+
 int kpchar(char c, int ro, int co)
 {
-   int x, y;
-   x = co*8;
-   y = ro*16;
-   //printf("c=%x [%d%d] (%d%d)\n", c, ro,co,x,y);
-   dchar(c, x*10, y*10);
-   
+  int x, y;
+  x = co * 8;
+  y = ro * 16;
+  //printf("c=%x [%d%d] (%d%d)\n", c, ro,co,x,y);
+  dchar(c, x * 10, y * 10);
 }
 
 int unkpchar(char c, int ro, int co)
 {
-   int x, y;
-   x = co*8;
-   y = ro*16;
-   //printf("c=%x [%d%d] (%d%d)\n", c, ro,co,x,y);
-   undchar(c, x, y);
+  int x, y;
+  x = co * 8;
+  y = ro * 16;
+  //printf("c=%x [%d%d] (%d%d)\n", c, ro,co,x,y);
+  undchar(c, x, y);
 }
 
 int erasechar()
-{ 
+{
   // erase char at (row,col)
   int r, bit, x, y;
   unsigned char *caddress, byte;
 
-  x = col*8;
-  y = row*16;
- 
+  x = col * 8;
+  y = row * 16;
+
   //printf("ERASE: row=%d col=%d x=%d y=%d\n",row,col,x,y);
 
-  for (r=0; r<16; r++){
-     for (bit=0; bit<8; bit++){
-        clrpix(x+bit, y+r);
+  for (r = 0; r < 16; r++)
+  {
+    for (bit = 0; bit < 8; bit++)
+    {
+      clrpix(x + bit, y + r);
     }
   }
-} 
+}
 
 int clrcursor()
 {
@@ -221,15 +228,18 @@ int putcursor(unsigned char c)
 int kputc(char c)
 {
   clrcursor();
-  if (c=='\r'){
-    col=0;
+  if (c == '\r')
+  {
+    col = 0;
     //printf("row=%d col=%d\n", row, col);
     putcursor(cursor);
     return;
   }
-  if (c=='\n'){
+  if (c == '\n')
+  {
     row++;
-    if (row>=25){
+    if (row >= 25)
+    {
       row = 24;
       scroll();
     }
@@ -237,8 +247,10 @@ int kputc(char c)
     putcursor(cursor);
     return;
   }
-  if (c=='\b'){
-    if (col>0){
+  if (c == '\b')
+  {
+    if (col > 0)
+    {
       col--;
       erasechar();
       putcursor(cursor);
@@ -248,21 +260,24 @@ int kputc(char c)
   // c is ordinary char
   kpchar(c, row, col);
   col++;
-  if (col>=80){
+  if (col >= 80)
+  {
     col = 0;
     row++;
-    if (row >= 25){
+    if (row >= 25)
+    {
       row = 24;
       scroll();
     }
   }
-  putcursor(cursor); 
+  putcursor(cursor);
   //printf("row=%d col=%d\n", row, col);
 }
 
 int kprints(char *s)
 {
-  while(*s){
+  while (*s)
+  {
     kputc(*s);
     s++;
   }
@@ -271,17 +286,19 @@ int kprints(char *s)
 int krpx(int x)
 {
   char c;
-  if (x){
-     c = tab[x % 16];
-     krpx(x / 16);
+  if (x)
+  {
+    c = tab[x % 16];
+    krpx(x / 16);
   }
   kputc(c);
 }
 
 int kprintx(int x)
 {
-  kputc('0'); kputc('x');
-  if (x==0)
+  kputc('0');
+  kputc('x');
+  if (x == 0)
     kputc('0');
   else
     krpx(x);
@@ -291,17 +308,20 @@ int kprintx(int x)
 int krpu(int x)
 {
   char c;
-  if (x){
-     c = tab[x % 10];
-     krpu(x / 10);
+  if (x)
+  {
+    c = tab[x % 10];
+    krpu(x / 10);
   }
   kputc(c);
 }
 
 int kprintu(int x)
 {
-  if (x==0){
-    kputc(' ');kputc('0');
+  if (x == 0)
+  {
+    kputc(' ');
+    kputc('0');
   }
   else
     krpu(x);
@@ -310,69 +330,188 @@ int kprintu(int x)
 
 int kprinti(int x)
 {
-  if (x<0){
+  if (x < 0)
+  {
     kputc('-');
     x = -x;
   }
   kprintu(x);
 }
 
-int kprintf(char *fmt,...)
+int kprintf(char *fmt, ...)
 {
   int *ip;
   char *cp;
   cp = fmt;
   ip = (int *)&fmt + 1;
 
-  while(*cp){
-    if (*cp != '%'){
+  while (*cp)
+  {
+    if (*cp != '%')
+    {
       kputc(*cp);
-      if (*cp=='\n')
-	kputc('\r');
+      if (*cp == '\n')
+        kputc('\r');
       cp++;
       continue;
     }
     cp++;
-    switch(*cp){
-    case 'c': kputc((char)*ip);      break;
-    case 's': kprints((char *)*ip);  break;
-    case 'd': kprinti(*ip);          break;
-    case 'u': kprintu(*ip);          break;
-    case 'x': kprintx(*ip);          break;
+    switch (*cp)
+    {
+    case 'c':
+      kputc((char)*ip);
+      break;
+    case 's':
+      kprints((char *)*ip);
+      break;
+    case 'd':
+      kprinti(*ip);
+      break;
+    case 'u':
+      kprintu(*ip);
+      break;
+    case 'x':
+      kprintx(*ip);
+      break;
     }
-    cp++; ip++;
+    cp++;
+    ip++;
   }
 }
 
 int show_bmp(char *p, int startRow, int startCol)
-{ 
-   int h, w, pixel, r1, r2, i, j; 
-   unsigned char r, g, b;
-   char *pp;
- 
- //sets borders
-   int *q = (int *)(p+14); // skip over 14 bytes file header 
-   q++;                    // skip 4 bytes in image header
-   w = *q;                 // width in pixels 
-   h = *(q + 1);           // height in pixels
+{
+  int h, w, pixel, r1, r2, i, j;
+  unsigned char r, g, b;
+  char *pp;
 
-   p += 54;                // p point at pixels now 
+  //sets borders
+  int *q = (int *)(p + 14); // skip over 14 bytes file header
+  q++;                      // skip 4 bytes in image header
+  w = *q;                   // width in pixels
+  h = *(q + 1);             // height in pixels
 
-   // but the picture is up-side DOWN
+  p += 54; // p point at pixels now
 
-   r1 = 3*w;
+  // but the picture is up-side DOWN
+
+  if (size > 4)
+  {
+    size = 1;
+  }
+
+
+
+        r1 = 3*w;
    r2 = 4*((3*w+3)/4);     // row size is a multiple of 4 bytes  
    p += (h-1)*r2;
 
-   for (i=startRow; i<(h+startRow)/2; i += 1){
+   for (i=startRow; i<(h+startRow); i += 1){
      pp = p;
-     for (j=startCol; j<(startCol+w)/2; j+=1){
-         b = *pp; g = *(pp+1); r = *(pp+2);
-         pixel = (b<<16) + (g<<8) + r;
-	 fb[i*640 + j] = pixel;
-         pp += 6;    // back pp by 3 bytes
+     for (j=startCol; j<(startCol+w); j+=1){
+       switch ((size))
+       {
+       case 1:color=RED;break;
+       case 2:color=BLUE;break;
+       case 3:color=CYAN;break;
+       case 4:color=YELLOW;break;
+         break;
+       
+       default:
+         break;
+       }
+       setpix(i,j);
+         pp += 3;    // back pp by 3 bytes
      }
-     p -= r2*2;
+     p -= r2;
    }
-   uprintf("\nBMP image height=%d width=%d\n", h, w);
+
+  if (size == 1)
+  {
+    r1 = 3 * w;
+    r2 = 4 * ((3 * w + 3) / 4); // row size is a multiple of 4 bytes
+    p += (h - 1) * r2;
+
+    for (i = startRow; i < (h + startRow); i += 1)
+    {
+      pp = p;
+      for (j = startCol; j < (startCol + w); j += 1)
+      {
+        b = *pp;
+        g = *(pp + 1);
+        r = *(pp + 2);
+        pixel = (b << 16) + (g << 8) + r;
+        fb[i * 640 + j] = pixel;
+        pp += 3; // back pp by 3 bytes
+      }
+      p -= r2;
+    }
+  }
+  else if (size == 2)
+  {
+
+    r1 = 3 * w;
+    r2 = 4 * ((3 * w + 3) / 4); // row size is a multiple of 4 bytes
+    p += (h - 1) * r2;
+
+    for (i = startRow; i < (h + startRow) / 2; i += 1)
+    {
+      pp = p;
+      for (j = startCol; j < (startCol + w) / 2; j += 1)
+      {
+        b = *pp;
+        g = *(pp + 1);
+        r = *(pp + 2);
+        pixel = (b << 16) + (g << 8) + r;
+        fb[i * 640 + j] = pixel;
+        pp += 6; // back pp by 3 bytes
+      }
+      p -= r2 * 2;
+    }
+  }
+  else if (size == 3)
+  {
+    r1 = 3 * w;
+    r2 = 4 * ((3 * w + 3) / 4); // row size is a multiple of 4 bytes
+    p += (h - 1) * r2;
+
+    for (i = startRow; i < (h + startRow) / 4; i += 1)
+    {
+      pp = p;
+      for (j = startCol; j < (startCol + w) / 4; j += 1)
+      {
+        b = *pp;
+        g = *(pp + 1);
+        r = *(pp + 2);
+        pixel = (b << 16) + (g << 8) + r;
+        fb[i * 640 + j] = pixel;
+        pp += 12; // back pp by 3 bytes
+      }
+      p -= r2 * 4;
+    }
+  }
+  else if (size == 4)
+  {
+    r1 = 3 * w;
+    r2 = 4 * ((3 * w + 3) / 4); // row size is a multiple of 4 bytes
+    p += (h - 1) * r2;
+
+    for (i = startRow; i < (h + startRow) / 8; i += 1)
+    {
+      pp = p;
+      for (j = startCol; j < (startCol + w) / 8; j += 1)
+      {
+        b = *pp;
+        g = *(pp + 1);
+        r = *(pp + 2);
+        pixel = (b << 16) + (g << 8) + r;
+        fb[i * 640 + j] = pixel;
+        pp += 24; // back pp by 3 bytes
+      }
+      p -= r2 * 8;
+    }
+  }
+  size++;
+
+  uprintf("\nBMP image height=%d width=%d\n", h, w);
 }
