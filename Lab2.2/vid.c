@@ -426,6 +426,8 @@ int show_bmp(char *p, int startRow, int startCol)
      p -= r2;
    }
 
+
+//sorry for ugly code due to the old compiler i get an error when trying to divide by a variable
   if (size == 1)
   {
     r1 = 3 * w;
