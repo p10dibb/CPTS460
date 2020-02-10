@@ -86,10 +86,10 @@ void kbd_handler1()
   scode = *(kp->base + KDATA);
 
   kprintf("scan code = %x ", scode);
-  
+  //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   if (scode & 0x80)
     return;
-//   c = unsh[scode];
+    c = unsh[scode];
 
   kprintf("%c", c);
   
