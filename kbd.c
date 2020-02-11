@@ -85,13 +85,23 @@ void kbd_handler1()
   color = YELLOW;
   scode = *(kp->base + KDATA);
 
-  kprintf("scan code = %x ", scode);
+  kprintf("scan code = %x \n", scode);
   //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   if (scode & 0x80)
     return;
-    c = unsh[scode];
+ 
+  else if (scode==0x12){
+    kprintf("shifted:\n");
+    shifted=!shifted;
 
-  kprintf("%c", c);
+  } else if(shifted==1){
+    c=utab[scode];
+  }else{
+      c=ltab[scode];
+
+  }
+
+  kprintf("letter: %c\n", c);
   
   kp->buf[kp->head++] = c;
   kp->head %= 128;
