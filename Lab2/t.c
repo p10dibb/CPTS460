@@ -91,7 +91,6 @@ int main()
   myprintf(up,"UART2: %d ,%s\n",uart[2].n,uart[2].base);
   myprintf(up,"UART3: %d ,%s\n",uart[3].n,uart[3].base);
 
-
   uprints(up, "Compute sum of array\n\r");
   sum = 0;
   for (i = 0; i < N; i++)
