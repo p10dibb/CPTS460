@@ -1,0 +1,18 @@
+main()/*initial starter*/==>>
+timer_init()/*called in main*/==>
+timer_init for loop/* itterates through the 4 timers and sets thier bases timer timer[3]is set to run IRQ_handler every tick timer[2] runs kgetc() every tick*/ =>
+IRQ_handler()/* run every tick after initializtion*/=>
+
+IRQ_handler() if statement1/* checks if timer then runs  timer_handler()==>
+timer_handler()
+
+IRQ_handler()if statement for key press/*if true then runs kbd_handler*/==>
+kbd_handler() /* runs kbd_handler1() since my keyset=1*/==>
+kbd_handler() /*gets scode value*/==>
+kbd_handler() if(scode & 0x80) /*checks if locked if so return*/==>
+kbd_handler() kp->data++ /*triggers call of kgetc*/==>
+kgetc() while(kp->data==0) /*unlocks untill data!=0 this is when kbd_handler1 is run*/==>
+unlock() */sets 0x80 to 0*/==>
+kgetc() /*locks while retrieves key info*/==>
+lock()*/set bit 0x80 to 1 */==>
+kgetc() */sets all relevent data and returns*/

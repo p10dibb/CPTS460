@@ -22,6 +22,8 @@ void copy_vectors()
 void IRQ_handler()
 // IRQ interrupt handler in C
 {
+    // color=RED;
+    // kprintf("in IRQ handler\n");
     // read VIC status registers to find out which interrupt
     int vicstatus = VIC_STATUS;
     int sicstatus = SIC_STATUS;
@@ -48,6 +50,7 @@ int main()
     char line[128];
     color = RED; // int color in vid.c file
     fbuf_init(); // initialize LCD display
+
     /* enable VIC interrupts: timer0 at IRQ3, SIC at IRQ31 */
     VIC_INTENABLE = 0;
     VIC_INTENABLE |= (1 << 4); // timer0,1 at PIC.bit4

@@ -86,26 +86,37 @@ void kbd_handler1()
   scode = *(kp->base + KDATA);
 
   kprintf("scan code = %x \n", scode);
-  //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   if (scode & 0x80)
     return;
  
+    else if (scode==0x14){
+    control=!control;
+
+  }
   else if (scode==0x12){
-    kprintf("shifted:\n");
     shifted=!shifted;
 
   } else if(shifted==1){
     c=utab[scode];
-  }else{
+  }
+  else if(control==1){
+      c=ltab[scode];
+
+    kprintf("control-");
+    }
+    else{
       c=ltab[scode];
 
   }
 
-  kprintf("letter: %c\n", c);
+  kprintf("%c\n", c);
   
   kp->buf[kp->head++] = c;
   kp->head %= 128;
-  kp->data++; kp->room--;
+  kp->data++;
+  kprintf("%d\n",kp->data);
+
+   kp->room--;
 }
 
 // kbd_handelr2() for scan code set 2
@@ -136,6 +147,9 @@ void kbd_handler2()
 
 void kbd_handler()
 {
+  //   color=BLUE;
+
+  // kprintf("kbd_handler\an");
   if (keyset == 1)
     kbd_handler1();
   else
@@ -145,6 +159,7 @@ void kbd_handler()
 
 int kgetc()
 {
+  kprintf("getc\n");
   char c;
   KBD *kp = &kbd;
 

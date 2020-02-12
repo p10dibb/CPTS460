@@ -29,9 +29,9 @@ void timer_init()
         if (i == 1)
             tp->base = (u32 *)0x101E2020;
         if (i == 2)
-            tp->base = (u32 *)0x101E3000;
+            tp->base = (u32 *)0x101E3000; //calls kgetc
         if (i == 3)
-            tp->base = (u32 *)0x101E3020;
+            tp->base = (u32 *)0x101E3020;  //starts IRQ handler
         *(tp->base + TLOAD) = 0x0;
         // reset
         *(tp->base + TVALUE) = 0xFFFFFFFF;
@@ -47,6 +47,9 @@ void timer_init()
 }
 void timer_handler(int n)
 {
+    // color=GREEN;
+
+    // kprintf("timerhandler\n");
     int i;
     TIMER *t = &timer[n];
     t->tick++;
