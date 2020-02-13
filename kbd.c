@@ -86,10 +86,17 @@ void kbd_handler1()
   scode = *(kp->base + KDATA);
 
   kprintf("scan code = %x \n", scode);
-  if (scode & 0x80)
+
+  if(scode==0xF0){
+   release=1;
+  }
+  else if (scode & 0x80)
     return;
  
-    else if (scode==0x14){
+  else if(scode==0xF0){
+
+  }
+  else if (scode==0x14){
     control=!control;
 
   }
@@ -105,7 +112,10 @@ void kbd_handler1()
     kprintf("control-");
     }
     else{
+      if (release==0){
       c=ltab[scode];
+      }
+      release=0;
 
   }
 
@@ -114,7 +124,7 @@ void kbd_handler1()
   kp->buf[kp->head++] = c;
   kp->head %= 128;
   kp->data++;
-  kprintf("%d\n",kp->data);
+  // kprintf("%d\n",kp->data);
 
    kp->room--;
 }
@@ -159,7 +169,7 @@ void kbd_handler()
 
 int kgetc()
 {
-  kprintf("getc\n");
+  // kprintf("getc\n");
   char c;
   KBD *kp = &kbd;
 
