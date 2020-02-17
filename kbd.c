@@ -119,13 +119,16 @@ void kbd_handler1()
 
   }
 
+  if(control==1 && c=='d'){
+    // exit();
+  }
+
   kprintf("%c\n", c);
   
   kp->buf[kp->head++] = c;
   kp->head %= 128;
   kp->data++;
   // kprintf("%d\n",kp->data);
-
    kp->room--;
 }
 
