@@ -83,7 +83,7 @@ int body()
     printList("readyQueue", readyQueue);
     printsleepList(sleepList);
 	
-    printf("Enter a command [switch|kfork|exit] : ",
+    printf("Enter a command [switch|kfork|exit|wakeup|sleep] : ",
 	   running->pid);
     kgets(cmd);
 
@@ -94,5 +94,17 @@ int body()
     else if (strcmp(cmd, "exit")==0){
        kexit();
     }
+    else if(strcmp(cmd,"sleep")==0){
+      ksleep(running);
+    }
+
+    else if(strcmp(cmd,"wakeup")==0){
+      printf("what value to wakeup on?:\n");
+      kwakeup(geti());
+      // kwakeup(running);
+    }else{
+      printf("\n\ninvalid command\n\n");
+    }
+    printf("\n");
   }
 }
