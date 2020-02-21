@@ -15,7 +15,43 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ********************************************************************/
 
 // queue.c file
-//extern PROC *freeList;
+
+PROC *getproc(PROC **list)
+{
+  PROC *p = *list;
+  if (p){
+    *list = p->next;
+  }
+  return p;
+}
+
+int putproc(PROC **list, PROC *p)
+{
+  p->next = *list;
+  *list = p;
+}
+
+int enqueue(PROC **queue, PROC *p)
+{
+  PROC *q  = *queue;
+  if (q==0){
+    *queue = p;
+    p->next = 0;
+    return;
+  }
+  if ((*queue)->priority < p->priority){
+    p->next = *queue;
+    *queue = p;
+    return;
+  }
+  while (q->next && p->priority <= q->next->priority){
+    q = q->next;
+  }
+  p->next = q->next;
+  q->next = p;
+}
+
+/*
 int enqueue(PROC **queue, PROC *p)
 {
   PROC *q  = *queue;
@@ -30,7 +66,7 @@ int enqueue(PROC **queue, PROC *p)
   p->next = q->next;
   q->next = p;
 }
-
+*/
 PROC *dequeue(PROC **queue)
 {
   PROC *p = *queue;
@@ -39,22 +75,53 @@ PROC *dequeue(PROC **queue)
   return p;
 }
 
-int printList(char *name, PROC *p)
+int printQ(PROC *p)
 {
-  printf("%s=", name);
+  kprintf("readyQueue = ");
   while(p){
-    printf("[%d%d]->", p->pid, p->priority);
+    kprintf("[%d%d]->", p->pid,p->priority);
     p = p->next;
   }
-  printf("NULL\n");
+  kprintf("NULL\n");
 }
 
-int printsleepList(PROC *p)
+int printQueue(PROC *p)
 {
-  printf("sleepList=");
   while(p){
-    printf("[%devent=%d]->", p->pid, p->event);
+    kprintf("[%d%d]->", p->pid,p->priority);
     p = p->next;
   }
-  printf("NULL\n");
+  kprintf("NULL\n");
 }
+
+
+
+int printSleepList(PROC *p)
+{
+  printf("sleepList   = ");
+   while(p){
+     kprintf("[%d%d]->", p->pid,p->event);
+     p = p->next;
+  }
+  kprintf("NULL\n"); 
+}
+
+int printList(PROC *p)
+{
+   kprintf("freeLis    = ");
+   while(p){
+     kprintf("[%d]->", p->pid);
+     p = p->next;
+  }
+  kprintf("NULL\n"); 
+}
+
+int printlist(PROC *p)
+{
+   while(p){
+     kprintf("[%d]->", p->pid);
+     p = p->next;
+  }
+  kprintf("NULL\n"); 
+}
+

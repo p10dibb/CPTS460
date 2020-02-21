@@ -16,6 +16,12 @@ int init()
     p->pid = i;
     p->status = READY;
     p->next = p + 1;
+    p->mQueue=0;
+  p->mQlock.queue=0;
+  p->mQlock.value=1;
+  p->nmsg.queue=0;
+  p->nmsg.value=0;
+
   }
   proc[NPROC-1].next = 0; // circular proc list
 
@@ -35,6 +41,8 @@ int init()
   
 int kfork(int func, int priority)
 {
+
+  printf("FORKING__________\n");
   int i;
   PROC *p = dequeue(&freeList);
 
@@ -47,7 +55,10 @@ int kfork(int func, int priority)
   p->priority = priority;
   p->ppid = running->pid;
   p->parent = running;
-  
+
+
+
+
   // set kstack for new proc to resume to func()
   // stack = r0,r1,r2,r3,r4,r5,r6,r7,r8,r9,r10,r11,r12,r14
   //         1  2  3  4  5  6  7  8  9  10 11  12  13  14
@@ -65,9 +76,20 @@ int kfork(int func, int priority)
 int scheduler()
 {
   //  kprintf("proc %d in scheduler ", running->pid);
-  if (running->status == READY)
+  // printf("status:%d\n",running->status);
+  if (running->status == READY){
+  // printf("scheduler\n");
      enqueue(&readyQueue, running);
+
+  }
+  
+  
+
   running = dequeue(&readyQueue);
+  
+  
+  
+  
   //kprintf("next running = %d\n", running->pid);
   if (running->pid){
     color = running->pid;
@@ -98,9 +120,7 @@ int body()
     }
     else if(strcmp(cmd,"sleep")==0){
        printf("what value to wakeup on?:\n");
-      // ksleep(running);
       ksleep(geti());
-
     }
 
     else if(strcmp(cmd,"wakeup")==0){

@@ -20,5 +20,9 @@
                 }
             }
         ]
+    },
+    "files.associations": {
+        "type_traits": "c",
+        "type.h": "c"
     }
 }

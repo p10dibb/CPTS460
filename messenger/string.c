@@ -14,47 +14,48 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ********************************************************************/
 
-// queue.c file
-//extern PROC *freeList;
-int enqueue(PROC **queue, PROC *p)
+int kprintf(char *, ...);
+int strlen(char *s)
 {
-  PROC *q  = *queue;
-  if (q==0 || p->priority > q->priority){
-    *queue = p;
-    p->next = q;
-    return;
+  int i = 0;
+  while(*s){
+    i++; s++;
   }
-  while (q->next && p->priority <= q->next->priority){
-    q = q->next;
-  }
-  p->next = q->next;
-  q->next = p;
+  return i;
 }
 
-PROC *dequeue(PROC **queue)
+int strcmp(char *s1, char *s2)
 {
-  PROC *p = *queue;
-  if (p)
-    *queue = p->next;
-  return p;
+  while((*s1 && *s2) && (*s1==*s2)){
+      s1++; s2++;
+  }
+  if ((*s1==0) && (*s2==0))
+    return 0;
+  return(*s1 - *s2);
+
 }
 
-int printList(char *name, PROC *p)
+int strcpy(char *dest, char *src)
 {
-  printf("%s=", name);
-  while(p){
-    printf("[%d%d]->", p->pid, p->priority);
-    p = p->next;
+  while(*src){
+    *dest++ = *src++;
   }
-  printf("NULL\n");
+  *dest = 0;
 }
 
-int printsleepList(PROC *p)
+int atoi(char *s)
 {
-  printf("sleepList=");
-  while(p){
-    printf("[%devent=%d]->", p->pid, p->event);
-    p = p->next;
+  int v = 0;
+  while (*s){
+    v = 10*v + (*s - '0');
+    s++;
   }
-  printf("NULL\n");
+  //kprintf("v=%d\n", v);
+  return v;
+}
+int geti()
+{
+  char s[16];
+  kgets(s);
+  return atoi(s);
 }

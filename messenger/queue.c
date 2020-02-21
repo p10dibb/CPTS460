@@ -24,8 +24,9 @@ int enqueue(PROC **queue, PROC *p)
     p->next = q;
     return;
   }
-  while (q->next && p->priority <= q->next->priority){
+  while ((q->next && (p->priority < q->next->priority))&&q->next!=q){
     q = q->next;
+    
   }
   p->next = q->next;
   q->next = p;
