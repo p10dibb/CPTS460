@@ -16,6 +16,8 @@ int init()
     p->pid = i;
     p->status = READY;
     p->next = p + 1;
+    p->child->pid=-1;
+    p->sibling->pid=-1;
   }
   proc[NPROC-1].next = 0; // circular proc list
 
@@ -32,6 +34,13 @@ int init()
   printList("freeList", freeList);
 }
 
+int addChild(PROC* parent, PROC *newKid){
+  
+  newKid->sibling=parent->child;
+  parent->child=newKid;
+  return;
+
+}
   
 int kfork(int func, int priority)
 {
@@ -47,6 +56,9 @@ int kfork(int func, int priority)
   p->priority = priority;
   p->ppid = running->pid;
   p->parent = running;
+  addChild(running,p);
+
+
   
   // set kstack for new proc to resume to func()
   // stack = r0,r1,r2,r3,r4,r5,r6,r7,r8,r9,r10,r11,r12,r14
@@ -73,19 +85,31 @@ int scheduler()
     color = running->pid;
   }
 }  
+
+int showKids(PROC* parent){
+  PROC * temp=parent->child;
+      printf("children are:",running->pid);
+      while (temp->pid!=-1)
+      {
+        printf(" %d,",temp->pid);
+        temp=temp->sibling;
+      }
+}
+
 int body()
 {
   char c, cmd[64];
 
   kprintf("proc %d resume to body()\n", running->pid);
   while(1){
-    printf("-------- proc %d running -----------\n", running->pid);
-    
+    printf("-------- proc %d running ppid: %d ,", running->pid,running->parent->pid);
+    showKids(running);
+    printf("-----------\n");
     printList("freeList  ", freeList);
     printList("readyQueue", readyQueue);
     printsleepList(sleepList);
 	
-    printf("Enter a command [switch|kfork|exit|wakeup|sleep] : ",
+    printf("Enter a command [switch|kfork|exit|wakeup|sleep|children] : ",
 	   running->pid);
     kgets(cmd);
 
@@ -99,8 +123,12 @@ int body()
     else if(strcmp(cmd,"sleep")==0){
        printf("what value to wakeup on?:\n");
       // ksleep(running);
-      ksleep(geti());
-
+      ksleep(running->pid);
+    }
+    else if(strcmp(cmd,"children")==0){
+      showKids(running);
+      
+    
     }
 
     else if(strcmp(cmd,"wakeup")==0){

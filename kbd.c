@@ -94,7 +94,7 @@ void kbd_handler2()
   kp->buf[kp->head++] = c;
   kp->head %= 128;
   kp->data++; kp->room--;
-  kwakeup(&kp->data);
+  // kwakeup(&kp->data);
 
 
 }
@@ -113,7 +113,7 @@ int kgetc()
   KBD *kp = &kbd;
 
   while (kp->data == 0){
-  ksleep(&kp->data);
+  // ksleep(&kp->data);
   }
     // ; // BUSY WAIT for kp>data
 
