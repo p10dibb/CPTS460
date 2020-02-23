@@ -35,7 +35,7 @@ int init()
 }
 
 int addChild(PROC* parent, PROC *newKid){
-  
+  newKid->parent=parent;
   newKid->sibling=parent->child;
   parent->child=newKid;
   return;
@@ -91,7 +91,21 @@ int showKids(PROC* parent){
       printf("children are:",running->pid);
       while (temp->pid!=-1)
       {
-        printf(" %d,",temp->pid);
+        printf(" [%d,",temp->pid);
+        
+        switch (temp->status)
+        {
+        case 0: printf("Free]");  break;
+        case 1: printf("Ready]");  break;
+        case 2: printf("Sleep]");  break;
+        case 3: printf("Block]");  break;
+        case 4: printf("Zombie]");  break;
+        
+        default:
+          break;
+        }
+        
+        printf("");
         temp=temp->sibling;
       }
 }
@@ -102,40 +116,46 @@ int body()
 
   kprintf("proc %d resume to body()\n", running->pid);
   while(1){
-    printf("-------- proc %d running ppid: %d ,", running->pid,running->parent->pid);
+    printf(" proc %d running ppid: %d ,", running->pid,running->parent->pid);
     showKids(running);
     printf("-----------\n");
     printList("freeList  ", freeList);
     printList("readyQueue", readyQueue);
     printsleepList(sleepList);
 	
-    printf("Enter a command [switch|kfork|exit|wakeup|sleep|children] : ",
+    printf("Enter a command [switch|fork|exit|children|wait] : ",
 	   running->pid);
     kgets(cmd);
 
     if (strcmp(cmd, "switch")==0)
        tswitch();
-    else if (strcmp(cmd, "kfork")==0)
+    else if (strcmp(cmd, "fork")==0)
        kfork((int)body, 1);
     else if (strcmp(cmd, "exit")==0){
-       kexit();
+      if(running->pid==1){
+        printf("cant exit on first proc\n");
+      }else{
+        printf("which would you like to kill: ");
+       kexit(geti());
+        
+      }
     }
-    else if(strcmp(cmd,"sleep")==0){
-       printf("what value to wakeup on?:\n");
-      // ksleep(running);
-      ksleep(running->pid);
-    }
+   
     else if(strcmp(cmd,"children")==0){
       showKids(running);
       
     
     }
 
-    else if(strcmp(cmd,"wakeup")==0){
-      printf("what value to wakeup on?:\n");
-      kwakeup(geti());
-      // kwakeup(running);
-    }else{
+    // else if(strcmp(cmd,"wakeup")==0){
+    //   printf("what value to wakeup on?:\n");
+    //   kwakeup(geti());
+    //   // kwakeup(running);
+    // }
+    else if(strcmp(cmd,"wait")==0){
+     kwait(0);
+    }
+    else{
       printf("\n\ninvalid command\n\n");
     }
     printf("\n");
