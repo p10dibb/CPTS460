@@ -6,75 +6,104 @@ extern PROC *sleepList;
 int kexit(int exitCode) // SIMPLE kexit() for process to terminate
 {
 
-  
   printf("proc %d exit\n", running->pid);
   running->status = ZOMBIE;
   kwakeup(running->parent->pid);
   // recurKill(running->child);
-  PROC *t=running->child;
-  PROC *tnext=running->child;
+  PROC *t = running->child;
+  PROC *tnext = running->child;
 
-    while (t->pid != -1)
+  while (t->pid != -1)
   {
-    tnext=t->sibling;
-    addChild(running->parent,t);
-   t = tnext;
+    tnext = t->sibling;
+    addChild(running->parent, t);
+    t = tnext;
   }
 
   tswitch();
-  
-
 }
 
-int kwait(int exitCode){
+int kwait(int exitCode)
+{
 
-  PROC * temp=running->child,*pre;
-  if(temp->pid==-1){
-    return -1;
+  // PROC * temp=running->child,*pre;
+  // if(temp->pid==-1){
+  //   return -1;
+  // }
+  // pre=temp;
+  // while(temp->pid!=-1){
+  //   if(temp->status==ZOMBIE){
+  //     printf("pid:%d\n",temp->pid);
+  //     //first 1
+  //     if(pre->pid==temp->pid){
+  //       running->child=temp->sibling;
+  //     }else
+  //     {
+  //       pre->sibling=temp->sibling;
+  //     }
+
+  //     temp->sibling=0;
+  //     temp->parent=0;
+  //     temp->child=0;
+  //     temp->priority=0;
+
+  //     enqueue(&freeList,temp);
+  //     return(temp->pid);
+  //   }
+  //   pre=temp;
+  //   temp=temp->sibling;
+  // }
+
+  int ret = ZedCheck(running);
+  if (ret == -2)
+  {
+    ksleep(running->pid);
   }
-  pre=temp;
-  while(temp->pid!=-1){
-    if(temp->status==ZOMBIE){
-      printf("pid:%d\n",temp->pid);
-      //first 1
-      if(pre->pid==temp->pid){
-        running->child=temp->sibling;
-      }else
-      {
-        pre->sibling=temp->sibling;
-      }
-      
-      temp->sibling=0;
-      temp->parent=0;
-      temp->child=0;
-      temp->priority=0;
-
-      enqueue(&freeList,temp);
-      return(temp->pid);
-    }
-    pre=temp;
-    temp=temp->sibling;
+  else{
+    return ret;
   }
-
 }
 
 //recursivly goes through children and sets to ZOMBIE and removes from readyQUEUE
-int recurKill(PROC *kid)
+int ZedCheck(PROC *cur)
 {
-  PROC *t;
-  while (kid->pid != -1)
+  printf("ZEDCHECK ON %d\n",cur->pid);
+  PROC *temp = cur->child, *pre;
+  if (temp->pid == -1)
   {
-    
-    // recurKill(kid->child);
-    t = dequeue(&readyQueue);
-    while (t->pid != kid->pid)
-    {
-      enqueue(&readyQueue, t);
-      t = dequeue(&readyQueue);
-    }
-    kid->status = ZOMBIE;
-    kid = kid->sibling;
+    return -1;
   }
+  pre = temp;
+  while (temp->pid != -1)
+  {
+    if (temp->status == ZOMBIE)
+    {
+      printf("pid:%d\n", temp->pid);
+      //first 1
+      if (pre->pid == temp->pid)
+      {
+        printf("first1\n");
+        cur->child = temp->sibling;
+      }
+      else
+      {
+        printf("not first\n");
+
+        pre->sibling = temp->sibling;
+      }
+
+      temp->sibling = 0;
+      temp->parent = 0;
+      temp->child = 0;
+      temp->priority = 0;
+
+      enqueue(&freeList, temp);
+      return (temp->pid);
+    }
+    pre = temp;
+    temp = temp->sibling;
+  }
+  return -2;
 }
 
 int ksleep(int event)
