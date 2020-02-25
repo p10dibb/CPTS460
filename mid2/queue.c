@@ -19,12 +19,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 int enqueue(PROC **queue, PROC *p)
 {
   PROC *q  = *queue;
-  if (q==0 || p->priority > q->priority){
+  if (q==0 || p->count < q->count){
     *queue = p;
     p->next = q;
     return;
   }
-  while (q->next && p->priority <= q->next->priority){
+  while (q->next && p->count >= q->next->count){
     q = q->next;
   }
   p->next = q->next;

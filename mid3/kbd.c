@@ -27,7 +27,8 @@ int kbd_init()
   char scode;
   keyset = 1; // default to scan code set-1
 
-  KBD *kp = &kbd;
+  // KBD *kp = &kbd;
+  KBD *kp=kbd;
   kp->base = (char *)0x10006000;
   *(kp->base + KCNTL) = 0x10; // bit4=Enable bit0=INT on
   *(kp->base + KCLK) = 8;
@@ -51,7 +52,9 @@ int kbd_init()
 void kbd_handler1()
 {
   u8 scode, c;
-  KBD *kp = &kbd;
+  // KBD *kp = &kbd;
+  KBD *kp = kbd;
+
 
   scode = *(kp->base + KDATA);
 
@@ -74,7 +77,8 @@ void kbd_handler2()
 {
   // printf("handler2\n");
   u8 scode, c;
-  KBD *kp = &kbd;
+  // KBD *kp = &kbd;
+KBD *kp =kbd;
 
   scode = *(kp->base + KDATA);
 
@@ -110,7 +114,9 @@ void kbd_handler()
 int kgetc()
 {
   char c;
-  KBD *kp = &kbd;
+  // KBD *kp = &kbd;
+  KBD *kp =kbd;
+
 
   while (kp->data == 0){
   // ksleep(&kp->data);

@@ -144,6 +144,12 @@ int showKids(PROC *parent)
 int setTimer(int i){
 
 running->count=i;
+PROC* t=sleepList;
+printf("HOWMANY\n");
+while (t!=0){
+  t->count=t->count-i;
+  t=t->next;
+}
 ksleep(running->pid);
 
 }

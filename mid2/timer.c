@@ -85,7 +85,7 @@ void timer_handler(int n)
             }
         }
     }
-    color = n;
+    color = WHITE;
     // display in different color
     for (i = 0; i < 8; i++)
     {

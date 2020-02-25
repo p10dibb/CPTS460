@@ -45,6 +45,11 @@ void timer_init()
         // strcpy((char *)tp->clock, "00:00:00");
     }
 }
+int timer_clearInterrupt(int n) // timer_start(0), 1, etc.
+{
+    TIMER *tp = &timer[n];
+    *(tp->base + TINTCLR) = 0xFFFFFFFF;
+}
 void timer_handler(int n)
 {
     // kprintf("time Handled\n");
@@ -94,11 +99,7 @@ void timer_start(int n)
     // set enable bit 7
 }
 
-int timer_clearInterrupt(int n) // timer_start(0), 1, etc.
-{
-    TIMER *tp = &timer[n];
-    *(tp->base + TINTCLR) = 0xFFFFFFFF;
-}
+
 void timer_stop(int n)
 {
     // stop a timer

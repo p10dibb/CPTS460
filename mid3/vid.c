@@ -183,7 +183,7 @@ int kputc(char c)
     col=0;
     //printf("row=%d col=%d\n", row, col);
     putcursor();
-    return;
+    return 0;
   }
   if (c=='\n'){
     row++;
@@ -193,7 +193,7 @@ int kputc(char c)
     }
     //printf("row=%d col=%d\n", row, col);
     putcursor();
-    return;
+    return 0;
   }
   if (c=='\b'){
     if (col>0){
@@ -201,7 +201,7 @@ int kputc(char c)
       col--;
       putcursor();
     }
-    return;
+    return 0; 
   }
   // c is ordinary char
   kpchar(c, row, col);

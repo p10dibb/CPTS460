@@ -3,12 +3,13 @@
 #include "vid.c"
 
 #include "uart.c"
+#include "string.c"
 
 #include "kbd.c"
-#include "string.c"
 
 #include "timer.c"
 #include "exceptions.c"
+
 
 int mkptable()
 {
