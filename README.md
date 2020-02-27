@@ -119,8 +119,15 @@ During demo, let P1 kfork() serveral processes, e.g. P2, P3.
 		printf("test MM at VA=512MB\n");
 		*p = (int *)(512*0x100000); *p = 123;
 
-(1). Which of these will generate data_abort faults? WHY?__________________
+(1). Which of these will generate data_abort faults? WHY?Answer:128 and 512 because they both exceed or equal the 128 ram that they are aloted the amount has to be les then 128mb shich is why 127 works
 
 (2). When a data_abort fault occurs, the program displays some error messages.
      DRAW a diagram (with reason) to show the control flow of the CPU from
      where the fault occurred to where it shows the error messages.
+
+
+     main(C) // sets p = to value >=128 *0x100000 ==> 
+     ??  ==>
+     abt_stack //this trigures the call for datahandler==>
+     datahandler(assembly) //calls data_chandler in C ==>
+     data_chandler(C) //displays message

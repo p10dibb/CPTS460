@@ -35,7 +35,6 @@ u8 cursor;
 int volatile *fb;
 u8 *font;
 int row, col;
-int color;
 
 int fbuf_init()
 {

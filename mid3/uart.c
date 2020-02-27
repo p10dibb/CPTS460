@@ -14,9 +14,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ********************************************************************/
 
-// char *tab = "0123456789ABCDEF";
+char *tab = "0123456789ABCDEF";
 #define DR 0x00
 #define FR 0x18
+int color;
+
 
 typedef struct uart
 {

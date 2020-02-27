@@ -16,19 +16,18 @@ typedef struct kbd
   int head, tail, data, room;
 } KBD;
 
-KBD *kbd;
+KBD kbd;
 int release;
 
 int keyset;
 int kbd_init()
 {
-  printf("handler1\n");
+
 
   char scode;
   keyset = 1; // default to scan code set-1
 
-  // KBD *kp = &kbd;
-  KBD *kp=kbd;
+  KBD *kp = &kbd;
   kp->base = (char *)0x10006000;
   *(kp->base + KCNTL) = 0x10; // bit4=Enable bit0=INT on
   *(kp->base + KCLK) = 8;
@@ -39,9 +38,13 @@ int kbd_init()
   release = 0;
 
   printf("Detect KBD scan code: press the ENTER key : ");
+  //       while(1){
+  //   printf("in init\n");
+  // }
   while ((*(kp->base + KSTAT) & 0x10) == 0)
     ;
   scode = *(kp->base + KDATA);
+  
   printf("scode=%x ", scode);
   if (scode == 0x5A)
     keyset = 2;
@@ -51,10 +54,9 @@ int kbd_init()
 // kbd_handler1() for scan code set 1
 void kbd_handler1()
 {
-  u8 scode, c;
-  // KBD *kp = &kbd;
-  KBD *kp = kbd;
 
+  u8 scode, c;
+  KBD *kp = &kbd;
 
   scode = *(kp->base + KDATA);
 
@@ -63,9 +65,8 @@ void kbd_handler1()
 
   c = ltab[scode];
   if (c == '\r')
-    kputc('\n');
-  kputc(c);
-
+    printf("%c",c);
+  printf("\n");
   kp->buf[kp->head++] = c;
   kp->head %= 128;
   kp->data++;
@@ -77,8 +78,7 @@ void kbd_handler2()
 {
   // printf("handler2\n");
   u8 scode, c;
-  // KBD *kp = &kbd;
-KBD *kp =kbd;
+  KBD *kp = &kbd;
 
   scode = *(kp->base + KDATA);
 
@@ -114,9 +114,7 @@ void kbd_handler()
 int kgetc()
 {
   char c;
-  // KBD *kp = &kbd;
-  KBD *kp =kbd;
-
+  KBD *kp = &kbd;
 
   while (kp->data == 0){
   // ksleep(&kp->data);

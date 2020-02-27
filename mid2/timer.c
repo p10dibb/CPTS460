@@ -75,11 +75,10 @@ void timer_handler(int n)
         t->clock[3] = '0' + (t->mm / 10);
         t->clock[1] = '0' + (t->hh % 10);
         t->clock[0] = '0' + (t->hh / 10);
-    color=GREEN;
+        color=GREEN;
         if(sleepList!=0){
             sleepList->count--;
-            printList("ReadyQueue",readyQueue);
-            printsleepList(sleepList);
+            printTimerList(sleepList);
             if(sleepList->count==0){
                 kwakeup(sleepList->pid);
             }

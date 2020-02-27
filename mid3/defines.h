@@ -54,7 +54,6 @@ typedef unsigned int   u32;
 #define BLUE   0
 #define GREEN  1
 #define RED    2
-#define CYAN   3
-#define YELLOW 4
-#define PURPLE 5
-#define WHITE  6
+#define WHITE  3
+#define CYAN   4
+#define YELLOW 5

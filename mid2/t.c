@@ -44,10 +44,8 @@ void IRQ_handler()
     sicstatus = SIC_STATUS;  
  if (vicstatus & (1 << 4))
     {
-        for(int i=0;i<1;i++){
-        timer_handler(i);
+        timer_handler(0);
             
-        }
       //   timer_handler(0);
       //   bit4=1:timer0,1
       //   timer0 only
@@ -86,10 +84,9 @@ int main()
    timer_start(0); 
 
    kfork((int)body, 1);
-      kfork((int)body, 1);
-      kfork((int)body, 1);
-      kfork((int)body, 1);
-      kfork((int)body, 1);
+   kfork((int)body, 1);
+   kfork((int)body, 1);
+   kfork((int)body, 1);
 
    printf("P0 switch to P1\n");
    while(1){

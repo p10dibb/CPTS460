@@ -26,33 +26,7 @@ int kexit(int exitCode) // SIMPLE kexit() for process to terminate
 int kwait(int exitCode)
 {
 
-  // PROC * temp=running->child,*pre;
-  // if(temp->pid==-1){
-  //   return -1;
-  // }
-  // pre=temp;
-  // while(temp->pid!=-1){
-  //   if(temp->status==ZOMBIE){
-  //     printf("pid:%d\n",temp->pid);
-  //     //first 1
-  //     if(pre->pid==temp->pid){
-  //       running->child=temp->sibling;
-  //     }else
-  //     {
-  //       pre->sibling=temp->sibling;
-  //     }
-
-  //     temp->sibling=0;
-  //     temp->parent=0;
-  //     temp->child=0;
-  //     temp->priority=0;
-
-  //     enqueue(&freeList,temp);
-  //     return(temp->pid);
-  //   }
-  //   pre=temp;
-  //   temp=temp->sibling;
-  // }
+ 
 
   int ret = ZedCheck(running);
   if (ret == -2)
@@ -123,6 +97,7 @@ int kwakeup(int event)
 
   int i;
   PROC *p, *tproc;
+  printf("\n\nWakeup : %d \n\n",event);
 
   int sr = int_off();
 

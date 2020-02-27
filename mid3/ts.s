@@ -4,11 +4,14 @@
 .global vectors_start, vectors_end
 .global reset_handler, mkptable
 .global get_fault_status, get_fault_addr, get_spsr
+.global lock, unlock
+
+
 
 reset_handler:
-    LDR sp, =svc_stack_top // set SVC stack
+    LDR sp, =svc_stack // set SVC stack
     BL fbuf_init // initialize LCD for display
-    BL copy_vector_table // copy vector table to PA 0
+    BL copy_vectors // copy vector table to PA 0
     //(m1): build level-1 page table using 1MB sections in C code
     BL mkptable
     // (m2): set TTB register to 0x4000
@@ -30,13 +33,13 @@ reset_handler:
     mov r2, r2
     // go in ABT mode to set ABT stack
     MSR cpsr, #0x97
-    LDR sp, =abt_stack_top
+    LDR sp, =abt_stack
     // go in UND mode to set UND stack
     MSR cpsr, #0x9B
-    LDR sp, =und_stack_top
+    LDR sp, =und_stack
     // go in IRQ mode to set IRQ stack and enable IRQ interrupts
     MSR cpsr, #0x92 // write to cspr, so in IRQ mode now
-    LDR sp, =irq_stack_top // set IRQ stack poiner
+    LDR sp, =irq_stack // set IRQ stack poiner
     // go back in SVC mode
     MSR cpsr, #0x13
     // SVC mode with IRQ enabled
@@ -49,14 +52,29 @@ swi_handler:// dummy swi_handler, not used yet\
 data_handler:
     sub lr, lr, #4
     stmfd sp!, {r0-r12, lr}
+    @ bl dch 
     bl data_chandler // call data_chandler() in C
     ldmfd sp!, {r0-r12, pc}^
 
 irq_handler:
     sub lr, lr, #4
     stmfd sp!, {r0-r12, lr}
-    bl irq_chandler
+    bl IRQ_handler
     ldmfd sp!, {r0-r12, pc}^
+
+
+
+unlock:
+  MRS r4, cpsr
+  BIC r4, r4, #0x80   // clear bit means UNMASK IRQ interrupt
+  MSR cpsr, r4
+  mov pc, lr	
+
+lock: 
+  MRS r4, cpsr
+  ORR r4, r4, #0x80   // set bit means MASK off IRQ interrupt 
+  MSR cpsr, r4
+  mov pc, lr
 
 vectors_start:
     LDR PC, reset_handler_addr
@@ -88,3 +106,4 @@ get_fault_addr:
 get_spsr:
     mrs r0, spsr
     mov pc, lr
+

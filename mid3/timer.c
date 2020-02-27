@@ -7,6 +7,7 @@
 #define TBGLOAD 0x6
 // #include "defines.h"
 // #include "vid.c"
+int color;
 
 typedef volatile struct timer
 {
@@ -45,11 +46,6 @@ void timer_init()
         // strcpy((char *)tp->clock, "00:00:00");
     }
 }
-int timer_clearInterrupt(int n) // timer_start(0), 1, etc.
-{
-    TIMER *tp = &timer[n];
-    *(tp->base + TINTCLR) = 0xFFFFFFFF;
-}
 void timer_handler(int n)
 {
     // kprintf("time Handled\n");
@@ -80,13 +76,15 @@ void timer_handler(int n)
         t->clock[3] = '0' + (t->mm / 10);
         t->clock[1] = '0' + (t->hh % 10);
         t->clock[0] = '0' + (t->hh / 10);
+    color=GREEN;
+      
     }
-    color = n;
+    color = WHITE;
     // display in different color
     for (i = 0; i < 8; i++)
     {
         // kprintf("woot:");
-        kpchar(t->clock[i], n, 70 + i); // to line n of LCD
+        // kpchar((char)t->clock[i], n, 70 + i); // to line n of LCD
     }
     timer_clearInterrupt(n); // clear timer interrupt
 }
@@ -99,7 +97,11 @@ void timer_start(int n)
     // set enable bit 7
 }
 
-
+int timer_clearInterrupt(int n) // timer_start(0), 1, etc.
+{
+    TIMER *tp = &timer[n];
+    *(tp->base + TINTCLR) = 0xFFFFFFFF;
+}
 void timer_stop(int n)
 {
     // stop a timer

@@ -3,7 +3,6 @@
 #define NPROC 9
 PROC proc[NPROC], *running, *freeList, *readyQueue;
 PROC *sleepList;
-TIMERSET *timerList;
 
 int procsize = sizeof(PROC);
 int body();
@@ -106,52 +105,20 @@ int scheduler()
   }
 }
 
-int showKids(PROC *parent)
+int setTimer(int i)
 {
-  PROC *temp = parent->child;
-  printf("children are:", running->pid);
-  while (temp->pid != -1)
+
+  running->count = i;
+  PROC *t = sleepList;
+  while (t != 0)
   {
-    printf(" [%d,", temp->pid);
-
-    switch (temp->status)
+    if (t->count - i > 0)
     {
-    case 0:
-      printf("Free]");
-      break;
-    case 1:
-      printf("Ready]");
-      break;
-    case 2:
-      printf("Sleep]");
-      break;
-    case 3:
-      printf("Block]");
-      break;
-    case 4:
-      printf("Zombie]");
-      break;
-
-    default:
-      break;
+      t->count = t->count - i;
     }
-
-    printf("");
-    temp = temp->sibling;
+    t = t->next;
   }
-}
-
-int setTimer(int i){
-
-running->count=i;
-PROC* t=sleepList;
-printf("HOWMANY\n");
-while (t!=0){
-  t->count=t->count-i;
-  t=t->next;
-}
-ksleep(running->pid);
-
+  ksleep(running->pid);
 }
 
 int body()
@@ -162,15 +129,13 @@ int body()
   while (1)
   {
     printf(" proc %d running ppid: %d ,", running->pid, running->parent->pid);
-    showKids(running);
+   
     printf("-----------\n");
     printList("freeList  ", freeList);
     printList("readyQueue", readyQueue);
     printsleepList(sleepList);
-    printTimerList(timerList);
     printf("enter timer amt:");
     setTimer(geti());
-
 
     printf("\n");
   }

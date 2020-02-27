@@ -13,13 +13,13 @@ typedef unsigned int   u32;
 #define SIC_ENSET     (*((volatile u32 *)(SIC_BASE_ADDR + 0x008)))
 #define SIC_PICENSET  (*((volatile u32 *)(SIC_BASE_ADDR + 0x020)))
 
-// #define BLUE   0
-// #define GREEN  1
-// #define RED    2
-// #define CYAN   3
-// #define YELLOW 4
-// #define PURPLE 5
-// #define WHITE  6
+#define BLUE   0
+#define GREEN  1
+#define RED    2
+#define CYAN   3
+#define YELLOW 4
+#define PURPLE 5
+#define WHITE  6
 
 #define  SSIZE 1024
 
@@ -40,6 +40,8 @@ typedef struct proc{
   int    status;
   int    event;
   int    exitCode;
+  int count;
+
 
   struct proc *parent;
   struct proc *child;
@@ -47,3 +49,12 @@ typedef struct proc{
   
   int    kstack[SSIZE];
 }PROC;
+
+typedef struct timerset
+{
+  int count;
+  int pid;
+  struct timerset* next; 
+
+  
+}TIMERSET;
