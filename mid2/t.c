@@ -44,11 +44,8 @@ void IRQ_handler()
     sicstatus = SIC_STATUS;  
  if (vicstatus & (1 << 4))
     {
-        timer_handler(0);
-            
-      //   timer_handler(0);
-      //   bit4=1:timer0,1
-      //   timer0 only
+        timer_handler(0);           
+  
     }
     if (vicstatus & (1 << 31)){
       if (sicstatus & (1 << 3)){

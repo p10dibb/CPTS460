@@ -5,8 +5,7 @@
 #define TRIS 0x4
 #define TMIS 0x5
 #define TBGLOAD 0x6
-// #include "defines.h"
-// #include "vid.c"
+
 
 typedef volatile struct timer
 {
@@ -75,10 +74,13 @@ void timer_handler(int n)
         t->clock[3] = '0' + (t->mm / 10);
         t->clock[1] = '0' + (t->hh % 10);
         t->clock[0] = '0' + (t->hh / 10);
+
+
         color=GREEN;
+
         if(sleepList!=0){
             sleepList->count--;
-            printTimerList(sleepList);
+             printTimerList(sleepList);
             if(sleepList->count==0){
                 kwakeup(sleepList->pid);
             }

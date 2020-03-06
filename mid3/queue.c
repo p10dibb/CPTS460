@@ -22,8 +22,6 @@ int enqueue(PROC **queue, PROC *p)
   if (q==0 || p->count < q->count){
     *queue = p;
     p->next = q;
-    p->next->count=p->next->count-p->count;
-
     return;
   }
   while (q->next && p->count >= q->next->count){
@@ -31,11 +29,9 @@ int enqueue(PROC **queue, PROC *p)
   }
   p->next = q->next;
   q->next = p;
-
-  // if(p->next->count >0){
-    printf("pid:%d\n",p->pid);
+  if (p->next->count>0){
     p->next->count=p->next->count-p->count;
-  // }
+  }
 }
 
 PROC *dequeue(PROC **queue)
@@ -54,17 +50,7 @@ int tenqueue(TIMERSET **queue, TIMERSET *p)
     *queue=p;
 
   }
-  
-  // if (q==0 ){
-  //   *queue = p;
-  //   p->next = q;
-  //   return 0;
-  // }
-  // while (q->next ){
-  //   q = q->next;
-  // }
-  // p->next = q->next;
-  // q->next = p;
+
 }
 
 TIMERSET *tdequeue(TIMERSET **queue)
@@ -95,7 +81,7 @@ int printsleepList(PROC *p)
   printf("NULL\n");
 }
 
-int printTimerList(PROC *p)
+int printTimerList(TIMERSET *p)
 {
   printf("timerList=");
   while(p){

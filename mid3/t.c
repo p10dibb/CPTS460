@@ -193,10 +193,10 @@ color=WHITE;
 		printf("test MM at VA=127MB\n");
 		p = (int *)(127*0x100000); *p = 123;
 		
-		printf("test MM at VA=257MB\n");
-		p = (int *)(257*0x100000); *p = 123;
+		// printf("test MM at VA=257MB\n");
+		// p = (int *)(257*0x100000); *p = 123;
 
-		printf("test MM at VA=258MB\n");
+		printf("test MM at VA=128MB\n");
 		p = (int *)(258*0x100000); *p = 123;
 
 		printf("test MM at VA=512MB\n");
