@@ -1,3 +1,5 @@
+(cd ./USER; . ./mk12.sh )
+
 arm-none-eabi-as -mcpu=arm926ej-s ts.s -o ts.o
 arm-none-eabi-gcc -c -mcpu=arm926ej-s t.c -o t.o
 arm-none-eabi-ld -T t.ld ts.o t.o uPtable.obj load.obj svc.obj -Ttext=0x10000 -o t.elf
@@ -8,4 +10,4 @@ rm *.o *.elf
 echo ready to go?
 read dummy
 
-qemu-system-arm -M versatilepb -m 128M -sd sdimage -kernel t.bin
+qemu-system-arm -M versatilepb -m 128M -sd USER/sdimage -kernel t.bin

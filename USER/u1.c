@@ -15,17 +15,18 @@ int main()
   mode = getcpsr();
   mode = mode & 0x1F;
   printf("CPU mode=%x\n", mode);  // verify we are in USER mode
+    printf("IN MY  U1!!\n");
 
   pid = getpid();
   ppid = getppid();
-  
+
   while(1){
     printf("This is process %d in Umode parent=%d\n", pid, ppid);
     umenu();
-    printf("input a command : ");
-    ugets(line); 
-    printf("\n"); 
- 
+    printf("input a command for U1: ");
+    ugets(line);
+    printf("\n");
+
     if (strcmp(line, "getpid")==0)
        ugetpid();
     if (strcmp(line, "getppid")==0)
@@ -34,7 +35,10 @@ int main()
        ups();
     if (strcmp(line, "chname")==0)
        uchname();
-    if (strcmp(line, "switch")==0)
+    if (strcmp(line, "switch")==0){
+       printf("SWITCH11\n");
        uswitch();
+
+    }
   }
 }

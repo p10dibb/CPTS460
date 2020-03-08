@@ -1,4 +1,5 @@
    .global entryPoint, main, syscall, getcpsr
+   
 	.text
 .code 32
 // upon entry, bl main => r0 contains pointer to the string in ustack

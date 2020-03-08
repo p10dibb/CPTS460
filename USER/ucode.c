@@ -45,7 +45,10 @@ int uchname()
 
 int uswitch()
 {
-  return syscall(4,0,0,0);
+  // tswitch();
+  printf("SWITCH!!\n");
+  return printf("switch result %d\n",syscall(4,0,0,0));
+
 }
 
 int ugetc()

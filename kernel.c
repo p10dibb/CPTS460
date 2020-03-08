@@ -91,6 +91,9 @@ Same as kfork() before EXCEPT:
    which causes p to return to Umode to execcute filename
 ***********************************************************/
 
+
+
+
 PROC *kfork(char *filename)
 {
   int i, r; 
@@ -114,9 +117,14 @@ PROC *kfork(char *filename)
   p->parent = running;
   p->status = READY;
   p->priority = 1;
+  p->cpsr = (int *)0x10;    // previous mode was Umode
 
   // build p's pgtable 
   uPtable(p);
+  p->cpsr = (int *)0x10;    // previous mode was Umode
+
+
+  
   printf("new%d pgdir[2048]=%x\n", p->pid, p->pgdir[2048]); 
  
   // set kstack to resume to goUmode, then to Umode image at VA=0
@@ -141,7 +149,6 @@ PROC *kfork(char *filename)
 
   // to go Umode, must set new PROC's Umode cpsr to IF=00 umode=b'10000'=0x10
 
-  p->cpsr = (int *)0x10;    // previous mode was Umode
 
   // must load filename to Umode image area at 8MB+(pid-1)*1MB
   
