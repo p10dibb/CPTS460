@@ -13,46 +13,57 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ********************************************************************/
-#include "type.h"
+// #include "type.h"
 extern PROC proc[], *running;
 extern int tswitch();
 
 int ktswitch()
 {
-  // swtich process
+  tswitch();
 }
 
 int kgetpid()
 {
-  //return pid;
+  return running->pid;
 }
 
 int kgetppid()
 {
-  //return ppid;
+  return running->ppid;
 }
 
 char *pstatus[]={"FREE   ","READY  ","SLEEP  ","BLOCK  ","ZOMBIE", " RUN  "};
 int kps()
 {
-  // print process info
+    int i; PROC *p; 
+  for (i=0; i<NPROC; i++){
+     p = &proc[i];
+     kprintf("proc[%d]: pid=%d ppid=%d", i, p->pid, p->ppid);
+     if (p==running)
+       printf("%s ", pstatus[5]);
+     else
+       printf("%s", pstatus[p->status]);
+     printf("name=%s\n", p->name);
+  }
 }
 
 int kchname(char *s)
 { 
-  // change process name  to string s
+  kprintf("name: %s\n", s);
+  strcpy(running->name, s);
+  return 1;
+  
 }
 
 int kgetPA()
 {
-  // return Umode PA of process
+  return running->pgdir[2048] & 0xFFFF0000;
 }
 
 
 int svc_handler(int a, int b, int c, int d)
-{
+{ 
   int r;
-  
   // printf("svc_handler: a=%d b=%d c=%d d=%d\n",a,b,c,d);
 
   switch(a){ // a is the call number
