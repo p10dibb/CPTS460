@@ -1,5 +1,6 @@
 /************ uio.c file: must implement printf() in U space **********/
 #define printf uprintf
+#define printfu uprintfup
 
 char *tab = "0123456789ABCDEF";
 
@@ -83,6 +84,39 @@ int uprintf(char *fmt,...)
   while(*cp){
     if (*cp != '%'){
       uputc(*cp);
+      if (*cp=='\n')
+	uputc('\r');
+      cp++;
+      continue;
+    }
+    cp++;
+    switch(*cp){
+    case 'c': uputc((char)*ip);      break;
+    case 's': uprints((char *)*ip);  break;
+    case 'd': uprinti(*ip);          break;
+    case 'u': uprintu((u32)*ip);          break;
+    case 'x': uprintx((u32)*ip);          break;
+    }
+    cp++; ip++;
+  }
+}
+
+int uprintfup(char *fmt,...)
+{
+  int *ip;
+  char *cp;
+  cp = fmt;
+  ip = (int *)&fmt + 1;
+
+  while(*cp){
+    if (*cp != '%'){
+       if(*cp>='a'&&*cp<='z'){
+      uputc(*cp-32);
+
+       }
+       else{
+         uputc(*cp);
+       }
       if (*cp=='\n')
 	uputc('\r');
       cp++;

@@ -45,7 +45,7 @@ int kchname(char *s)
 
 int kgetPA()
 {
-  return Umode PA of process
+  // return Umode PA of process
 }
 
 

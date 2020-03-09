@@ -14,16 +14,16 @@ int main()
 
   mode = getcpsr();
   mode = mode & 0x1F;
-  printf("CPU mode=%x\n", mode);  // verify we are in USER mode
-    printf("IN MY  U1!!\n");
+  printfu("CPU mode=%x\n", mode);  // verify we are in USER mode
+    printfu("IN MY  U2!!\n");
 
   pid = getpid();
   ppid = getppid();
 
   while(1){
-    printf("This is process %d in Umode parent=%d\n", pid, ppid);
+    printfu("This is process %d in Umode parent=%d\n", pid, ppid);
     umenu();
-    printf("input a command for U2: ");
+      printfu("input a command for U2: ");
     ugets(line);
     printf("\n");
 
