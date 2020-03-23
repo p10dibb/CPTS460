@@ -135,7 +135,7 @@ int main()
 
    unlock();
    kfork("u1");
-   kfork("u2");
+  //  kfork("u2");
 
 
    

@@ -1,2 +1,1 @@
-. ./mk.sh u1
-. ./mk.sh u2
+. ./mku.sh u1
