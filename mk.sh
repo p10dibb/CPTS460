@@ -1,4 +1,4 @@
-(cd ./USER; . ./mk12.sh )
+(cd ./User; . ./mku.sh u1; . ./mku.sh u2 )
 
 arm-none-eabi-as -mcpu=arm926ej-s ts.s -o ts.o
 arm-none-eabi-gcc -c -mcpu=arm926ej-s t.c -o t.o
@@ -10,4 +10,4 @@ rm *.o *.elf
 echo ready to go?
 read dummy
 
-qemu-system-arm -M versatilepb -m 128M -sd USER/sdimage -kernel t.bin
+qemu-system-arm -M versatilepb -m 128M -sd sdimage -kernel t.bin

@@ -5,7 +5,7 @@ file.bin must be loaded to 0x10000 ==> . = 0x10000
 ENTRY(entryPoint)
 SECTIONS
 {
-  . = 0x80000000;
+  . = 0x0;
   .text : { *(.text) }
   .data : { *(.data) }
   .bss  : { *(.bss)  }
