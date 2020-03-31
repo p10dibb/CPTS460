@@ -237,30 +237,18 @@ int fork()
 	p->sibling = running->child;
 	running->child = p;
 
-    printf("building ptable\n");
 
-  // build p's pgtable  7mb + (pid)*1mb   
-    p->pgdir = (int *)(0x700000 + (p->pid - 1)*(0x100000)) ;
+      // build p's pgtable  7mb + pid 16kb 
+    p->pgdir = (int *)(0x700000 + (p->pid - 1)*0x4000);
     int * ptable = p->pgdir;
-    // initialize pgtable
-    for (i=0; i<4096; i++)
-        ptable[i] = 0;
-    int pentry = 0x412;
-    for (i=0; i<258; i++){
-        ptable[i] = pentry;
-    	pentry += 0x100000;
-  	}
 
-    printf("doing more stuff\n");
 
 	ptable[2048] = 0x800000 + (p->pid - 1)*0x100000|0xC32;
 	PA = (char*)((unsigned int)running->pgdir[2048] & 0xFFFF0000);
 	CA = (char*)((unsigned int)p->pgdir[2048] & 0xFFFF0000);
-    printf("memcpy\n");
 
 	memcpy(CA, PA, 0x100000);
 
-    printf("14 loop\n");
 
 	for(i = 1; i <= 14; i++)
 		p->kstack[SSIZE - i] = running->kstack[SSIZE - i];
@@ -271,10 +259,8 @@ int fork()
 	p->ksp = &(p->kstack[SSIZE - 28]);
 	p->usp = running->usp;
 	p->cpsr = running->cpsr;
-    printf("enqueing\n");
 
 	enqueue(&readyQueue, p);
-    printf("returning\n");
 
 	return p->pid;
 }

@@ -11,9 +11,10 @@ entryPoint:
 @ user process issues int syscall(a,b,c,d) ==> a,b,c,d are in r0-r3	
 syscall:
 	
-   stmfd sp!, {lr}
-     swi #0
-   ldmfd sp!, {pc}
+   stmfd sp!, {lr}  // save lr in Ustack
+	swi #0
+   ldmfd sp!, {lr}  // restore lr
+   mov pc, lr
 
 getmysp:
    mov r0, sp
