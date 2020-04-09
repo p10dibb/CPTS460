@@ -4,14 +4,20 @@ int main(int argc, char *argv[])
 {
   int i, pid, ppid, r;
   char line[64]; char uc;
+int p;
+
+
 
   for (i=0; i<argc; i++){
     printf("argv[%d] = %s\n", i, argv[i]);
   }
+
+
   
   while(1){
     pid  = getpid();
     ppid = getppid();
+    printf("p=%x\n",&p);
     printf("This is process %d in Umode at %x parent=%d\n", 
 	   pid, getPA(), ppid);
  

@@ -228,7 +228,8 @@ int fork()
 		return -1;
 
   }
-    printf("PROC IS not 0\n");
+  
+
 
 	p->ppid = running->pid;
 	p->parent = running;
@@ -243,7 +244,9 @@ int fork()
     int * ptable = p->pgdir;
 
 
-	ptable[2048] = 0x800000 + (p->pid - 1)*0x100000|0xC32;
+	ptable[2048] = 0x700000 + (p->pid - 1)*0x100000|0xC32;
+	ptable[2049] = 0x1600000 + (p->pid - 1)*0x100000|0xC32;
+
 	PA = (char*)((unsigned int)running->pgdir[2048] & 0xFFFF0000);
 	CA = (char*)((unsigned int)p->pgdir[2048] & 0xFFFF0000);
 
