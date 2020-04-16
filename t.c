@@ -114,11 +114,14 @@ int main()
    int i,a;
    char c;
    char line[128]; 
+
+   int p;
+
    
    color = RED;
    //   row = col = 0; 
    //   BASE = 10;
-      
+  
    fbuf_init();
    kprintf("                     Welcome to WANIX in Arm\n");
    kprintf("LCD display initialized : fbuf = %x\n", fb);
@@ -137,6 +140,7 @@ int main()
    kfork("u1");
   //  kfork("u2");
 
+  printf("p=%x\n",&p);
 
    
    color = CYAN;

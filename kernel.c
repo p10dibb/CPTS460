@@ -239,8 +239,8 @@ int fork()
 	running->child = p;
 
 
-      // build p's pgtable  7mb + pid 16kb 
-    p->pgdir = (int *)(0x700000 + (p->pid - 1)*0x4000);
+      // build p's pgtable  8mb + pid 16kb 
+    p->pgdir = (int *)(0x600000 + (p->pid - 1)*0x4000);
     int * ptable = p->pgdir;
 
 
