@@ -13,6 +13,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ********************************************************************/
+#define NULL 0
 
 
 typedef unsigned char   u8;
@@ -22,10 +23,11 @@ typedef unsigned int   u32;
 #include "uio.c"
 #include "crt0.c"
 #include "string.c"
+char * currentSTR ;
 
 int pid;
 char line[64], pathname[32], i2[32], i3[32];
-char *name[16], components[64];
+char *name[16], components[64] ;
 int nk;
 #define EOF -1
 extern char cr;
@@ -535,3 +537,45 @@ int strcasecmp(char *s1, char *s2)
   //printf("t2=%s\n", t1, t2);
   return strcmp(t1, t2);
 }
+
+
+char * strtok(char * s, char delimiter)
+{
+	char * ret;
+  //checks if takes a new input if so set it to the current str
+	if(s != NULL){
+		currentSTR = s;
+  }
+  //if  no new input then gets old string
+	else if(s == NULL && currentSTR !=NULL){
+	    s = currentSTR;
+  }
+  else{
+    *s='\0';
+  }
+//checks if end of string
+	if(*s == '\0'){
+		return NULL;
+  }
+  //itterates through till end of string or till dellimiter found
+	while(*s != '\0' && *s != delimiter){
+    
+		s++;
+  }
+  //if end of string just return current string
+	if(*s == '\0')
+	{
+		ret = currentSTR;
+		currentSTR = s;
+		return ret;
+	}
+ //if delimiter found set delimiter to '\0' then return current string
+	else
+	{
+		*s = '\0';
+	   ret = currentSTR;
+		currentSTR = s + 1;
+		return ret;
+	}
+}
+
