@@ -30,7 +30,7 @@ int main(int argc, char *argv[ ])
 	}
 
       }
-      printf("Paul's INIT burried an orphan proc %d\n", pid);	
+      printf("Paul's INIT removed orphan proc %d\n", pid);	
     }
   }
 }

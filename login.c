@@ -34,7 +34,7 @@ int main(int argc, char * argv[])
 
 
     //gets the stdin
-    int stdin = open(argv[1], O_RDONLY);
+    int stdin = open(argv[1], O_RDONLY), stdout = open(argv[1], O_WRONLY);
     
     fixtty(argv[1]);
     while(1)
