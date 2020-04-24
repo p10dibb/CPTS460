@@ -27,6 +27,10 @@ int main(int argc, char *argv[ ])
 	}
 	else{   // child
 	  exec("login /dev/tty0");
+	  // exec("login /dev/ttyS0");
+	  // exec("login /dev/ttyS1");
+
+
 	}
 
       }

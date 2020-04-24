@@ -1,5 +1,13 @@
 #include "ucode.c"
 
+char * removeSpacesFront(char *s){
+    while(*s == ' ')
+		s++;
+	return s;
+}
+
+
+
 int main(int argc,char argv[]){
     char str[500],temp[100];
     char *commands[20];
@@ -20,16 +28,20 @@ int main(int argc,char argv[]){
         commands[0]=strtok(str,'|');
         while(1){
             commands[i]=strtok(NULL,'|');
-
+            
             if(commands[i]==NULL){
                 break;
             }
+            // commands[i]=removeSpacesFront(commands[i]);
             i++;
         }
 
+        
+		
+
         i=0;
         //runs the commands
-        while(commands[i]!=NULL){
+        // while(commands[i]!=NULL){
             
             strcpy(temp,commands[0]);
             
@@ -57,7 +69,7 @@ int main(int argc,char argv[]){
             }
 
             i++;
-        }
+        // }
 
     }
 }

@@ -35,7 +35,7 @@ int main(int argc, char * argv[])
             //if input is space then show 30 more lines
 			if(input == ' ')
 			{
-				displayAmt = 30;
+				displayAmt = 20;
 				break;
 			}
             //else show just next line

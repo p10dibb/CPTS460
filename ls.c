@@ -1,5 +1,4 @@
 
-#define MAX   1024
 
 #include "ucode.c"
 char cwd[256];

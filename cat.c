@@ -3,31 +3,38 @@
 
 #include "ucode.c"
 
-char buffer[1024];
 
 int main(int argc, char * argv[])
 {
+char buf[MAX] ,str[500];
+int in,out;
     printf("\n---------------------\n");
     printf("Pauls CAT\n");
     printf("----------------------\n");
     int fd=0;
     //checks if thier is an input file
 	if(argc > 1)
-	{
-        
+	{        
         //opens new file
+        close(0);
 		fd=open(argv[1], O_RDONLY);
-        // printf("fd=%d argv[1]=%s\n",fd,argv[1]);
-	}
-    // int i=0;
-    
-    //reads untill end of file and displays
-	while(read(fd, buffer, 1024))
+          //reads untill end of file and displays
+	while(read(fd, buf, MAX))
 	{
-		printf("%s",buffer);
-       // i++;
+		printf("%s",buf);
 	}
-   // printf("\n%d\n",i);
+	}else{
+
+        while(strcmp("exit",str)!=0){
+    gets(str);
+    printf("%s\n",str);
+        }
+
+    
+    }
+    
+  
+
 	
 	return 0;
 }

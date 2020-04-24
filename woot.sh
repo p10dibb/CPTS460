@@ -1,2 +1,6 @@
-. ./mku.sh more
+. ./mku.sh cat
+
+
+
+
 . ./run.sh
