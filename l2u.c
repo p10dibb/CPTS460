@@ -31,7 +31,12 @@ if(argc<2){
         printf("Usage: l2u [file1] [file2]\n");
     return;
 }
-if (argc==3){
+else if(argc==2){
+    //frees up 1 position for wrighting with printf
+close(1);
+outfile = open(argv[1],O_WRONLY|O_CREAT );
+}
+else if (argc==3){
 
 //frees up 0 position for reading
 close(0);

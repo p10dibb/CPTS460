@@ -40,39 +40,25 @@ int main(int argc, char *argv[])
         return;
     }
 
-    if (argc >= 2)
+    if (argc > 2)
     {
-        // close(0);
+         close(0);
         fd = open(argv[2], O_RDONLY);
     }
 
-    //reads in full file
+    //reads FILE By line
     int i=0;
-    while (read(fd, buf, MAX))
+    while (getline(buf))
     {
-        strcat(full, buf);
-        printf("%d\n",i);
-        i++;
+        // strcat(full, buf);
+         if (isSubstring(argv[1], buf) == 1)
+        {
+            printf("%s\n", buf);
+        }
+        // i++;
     }
 
-    // parses file by line if argv1 is substring then print it
-    cur = strtok(full, '\n');
-    if (isSubstring(argv[1], cur) == 1)
-    {
-        printf("%s", cur);
-    }
-    while (1)
-    {
-        cur = strtok(NULL, '\n');
-        if (cur == NULL)
-        {
-            break;
-        }
-        if (isSubstring(argv[1], cur) == 1)
-        {
-            printf("%s\n", cur);
-        }
-    }
+
 
     return 0;
 }

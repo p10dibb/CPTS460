@@ -1,4 +1,4 @@
-. ./mku.sh cat
+. ./mku.sh l2u
 
 
 
