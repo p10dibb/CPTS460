@@ -7,10 +7,9 @@
 int main(int argc, char * argv[])
 {
 char buf[MAX] ,str[500];
-int in,out;
-    printf("\n---------------------\n");
-    printf("Pauls CAT\n");
-    printf("----------------------\n");
+    // printf("\n---------------------\n");
+    // printf("Pauls CAT\n");
+    // printf("----------------------\n");
     int fd=0;
     //checks if thier is an input file
 	if(argc > 1)

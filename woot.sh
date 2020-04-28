@@ -1,4 +1,4 @@
-. ./mku.sh l2u
+. ./mku.sh init
 
 
 
